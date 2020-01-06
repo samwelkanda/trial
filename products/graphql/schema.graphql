@@ -1,0 +1,38 @@
+scalar DateTime
+scalar Date
+
+type Query{
+    # policy: Policy
+    policies: PoliciesPayload
+}
+
+type Mutation {
+    createPolicy(input: CreatePolicyInput!): PolicyPayload!
+}
+
+type User @key(fields: "uid") @extends {
+    uid: String! @external
+}
+
+type Policy {
+    uid: String!
+    name: String
+    insured: User
+    description: String
+}
+
+input CreatePolicyInput {
+    name: String
+    insured: String
+    description: String
+}
+
+type PolicyPayload{
+    error: String
+    policy: Policy
+}
+
+type PoliciesPayload {
+    error: String
+    policies: [Policy]
+}
