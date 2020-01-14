@@ -18,12 +18,14 @@ type Policy {
     uid: String!
     name: String
     insured: User
+    accountManager: User
     description: String
 }
 
 input CreatePolicyInput {
     name: String
     insured: String
+    accountManager: String
     description: String
 }
 

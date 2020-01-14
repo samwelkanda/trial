@@ -21,22 +21,39 @@ manager = federation.FederatedManager(
     query=query_type,
 )
 
+
+@policy_type.field("name")
+def resolve_policy_name(obj, *_):
+    return f'{obj.name}'
+
+
+@policy_type.field("insured")
+def resolve_insured(obj, *_):
+    return {"uid": obj.insured}
+
+
+@policy_type.field("accountManager")
+def resolve_account_manager(obj, *_):
+    return {"uid": obj.account_manager}
+
+
+@policy_type.field("description")
+def resolve_policy_description(obj, *_):
+    return f'{obj.description}'
+
+
 @query_type.field("policies")
 def resolve_policies(_, info):
     try:
         policies = Policy.objects.all()
         return dict(
-            policies=[policy.serialize() for policy in policies]
+            policies=[policy for policy in policies]
             )
     except Exception as e:
         return dict(
             error=f"An error occurred: {e}"
         )
 
-# @query_type.field("policy")
-# def resolve_policy(_, info, uid):
-#     policy = Policy.objects.get(uid=uid)
-#     return dict(policy=policy.serialize())
 
 @mutation.field("createPolicy")
 def resolve_create_policy(_, info, input):
@@ -44,11 +61,12 @@ def resolve_create_policy(_, info, input):
         new_policy=Policy.objects.create(
             name=input["name"],
             insured=input["insured"],
+            account_manager=input["accountManager"],
             description=input["description"]
         )
 
         return dict(
-            policy=new_policy.serialize()
+            policy=new_policy
         )
     except Exception as e:
         return dict(

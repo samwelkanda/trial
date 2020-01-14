@@ -6,6 +6,7 @@ class Policy(models.Model):
     uid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     insured = models.UUIDField(primary_key=False)
+    account_manager = models.UUIDField(primary_key=False)
     description = models.CharField(max_length=250)
 
     def serialize(self):
